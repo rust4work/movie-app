@@ -9,7 +9,7 @@ export interface Movie {
   genre_ids?: number[];
   original_language?: string;
   original_title?: string;
-  popularity?: number;
+  popularity: number;
   video?: boolean;
   vote_count?: number;
   adult?: boolean;

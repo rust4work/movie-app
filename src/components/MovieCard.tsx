@@ -6,8 +6,7 @@ import Tag from "./helper/Tag";
 function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
   return (
-    <div className="w-[451px] flex gap-8 max-w-wd min-h-72">
-      {/* Changed h-72 to min-h-72 so it can grow */}
+    <div className="w-[451px] flex gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl">
       <div className="w-[183px] h-[281px] flex-shrink-0">
         <Image
           src={`${movie.poster_path}`}
@@ -26,10 +25,7 @@ function MovieCard(movie: Movie) {
             <Tag key={index} tag={tag} />
           ))}
         </div>
-        <p className="text-sm line-clamp-6 overflow-hidden">
-          {/* Added line-clamp to limit overflow */}
-          {movie.overview}
-        </p>
+        <p className="text-sm line-clamp-6 overflow-hidden">{movie.overview}</p>
       </div>
     </div>
   );

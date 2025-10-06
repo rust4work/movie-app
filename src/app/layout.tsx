@@ -20,9 +20,8 @@ export default function RootLayout({
   const activeKey = pathname.includes("rated") ? "rated" : "/";
   return (
     <html lang="en">
-      <body className="flex flex-col items-center">
-        {/* Header + Tabs */}
-        <nav className=" mt-5">
+      <body className="flex flex-col items-center ">
+        <nav className=" mt-5 w-screen flex justify-center shadow-lg">
           <Tabs
             activeKey={activeKey}
             onChange={(key) => router.push(`/${key}`)}
@@ -30,8 +29,7 @@ export default function RootLayout({
           />
         </nav>
 
-        {/* Контент страницы */}
-        <main className="w-screen flex justify-center mt-10">{children}</main>
+        <main className="w-screen flex justify-center mt-1">{children}</main>
       </body>
     </html>
   );
