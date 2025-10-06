@@ -20,6 +20,10 @@ export default function RootLayout({
   const activeKey = pathname.includes("rated") ? "rated" : "/";
   return (
     <html lang="en">
+      <head>
+        <title>Movie Search</title>
+        <link rel="icon" href="./movie-icon.ico" />
+      </head>
       <body className="flex flex-col items-center ">
         <nav className=" mt-5 w-screen flex justify-center shadow-lg">
           <Tabs

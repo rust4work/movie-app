@@ -73,7 +73,7 @@ export default function Search() {
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-4">
+      <div className="mt-4 flex justify-center flex-wrap gap-4">
         {movies?.map((movie) => (
           <MovieCard
             key={movie.id}
