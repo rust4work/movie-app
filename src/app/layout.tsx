@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col items-center">
         {/* Header + Tabs */}
-        <nav className=" mt-4">
+        <nav className=" mt-5">
           <Tabs
             activeKey={activeKey}
             onChange={(key) => router.push(`/${key}`)}
@@ -31,7 +31,7 @@ export default function RootLayout({
         </nav>
 
         {/* Контент страницы */}
-        <main className="w-screen flex justify-center mt-4">{children}</main>
+        <main className="w-screen flex justify-center mt-10">{children}</main>
       </body>
     </html>
   );
