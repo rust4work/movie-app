@@ -1,13 +1,16 @@
 import React from "react";
+import { getGenreName } from "@/utils/genres";
 
-type TagProps = {
-  tag: string;
-};
+interface TagProps {
+  tag: number;
+}
 
 export default function Tag({ tag }: TagProps) {
+  const genreName = getGenreName(tag);
+
   return (
-    <div className="inline-flex border border-[#D9D9D9] rounded-xs text-xs bg-[#FAFAFA] text-[#000000A6] px-[4px] py-[4px]">
-      {tag}
-    </div>
+    <span className="inline-flex border border-[#D9D9D9] rounded-xs text-xs bg-[#FAFAFA] text-[#000000A6] px-[4px] py-[4px]">
+      {genreName}
+    </span>
   );
 }

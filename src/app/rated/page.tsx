@@ -1,29 +1,40 @@
+"use client";
+import { useEffect, useState } from "react";
 import MovieCard from "@/components/MovieCard";
-import React from "react";
+import { Movie } from "@/types/movie.types";
+import { Spin } from "antd";
 
-function page() {
-  return (
-    <div>
-      <MovieCard
-        id={1}
-        title="Requiem for a Dream"
-        release_date="2010-07-16"
-        vote_average={8.8}
-        poster_path="https://www.rogerebert.com/wp-content/uploads/2024/03/Requiem-for-a-Dream.jpg"
-        description="A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."
-        tagline={["Action", "Sci-Fi", "Thriller"]}
-      />
-      <MovieCard
-        id={1}
-        title="Fight Club"
-        release_date="2010-07-16"
-        vote_average={8.8}
-        poster_path="https://tse2.mm.bing.net/th/id/OIP.X8GXwUnJEzAclGg3OtAnrAHaLH?pid=Api&P=0&h=220"
-        description="A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O."
-        tagline={["Action", "Sci-Fi", "Thriller"]}
-      />
+export default function Page() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/rated")
+      .then((res) => res.json())
+      .then((data) => {
+        setMovies(data.results || []);
+        setLoading(false);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  return loading ? (
+    <Spin size="large" />
+  ) : (
+    <div className="flex flex-wrap justify-center gap-4 max-w-screen p-4">
+      {movies?.map((movie) => (
+        <MovieCard
+          key={movie.id}
+          id={movie.id}
+          title={movie.title}
+          release_date={movie.release_date}
+          vote_average={movie.vote_average}
+          poster_path={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          overview={movie.overview || "No overview available."}
+          genre_ids={movie.genre_ids}
+        />
+      ))}
     </div>
   );
 }
-
-export default page;

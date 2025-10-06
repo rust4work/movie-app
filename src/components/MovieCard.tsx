@@ -4,10 +4,11 @@ import Image from "next/image";
 import Tag from "./helper/Tag";
 
 function MovieCard(movie: Movie) {
-  const tags = movie.tagline;
+  const tags = movie.genre_ids;
   return (
-    <div className=" w-[451px] flex gap-8 max-w-wd h-72">
-      <div className="w-[183px] h-[281px] bg-gray-300">
+    <div className="w-[451px] flex gap-8 max-w-wd min-h-72">
+      {/* Changed h-72 to min-h-72 so it can grow */}
+      <div className="w-[183px] h-[281px] flex-shrink-0">
         <Image
           src={`${movie.poster_path}`}
           alt={movie.title}
@@ -15,17 +16,20 @@ function MovieCard(movie: Movie) {
           height={281}
         />
       </div>
-      <div className=" flex flex-col gap-[12px] w-[268px]">
-        <span className="font-semibold text-xl ">{movie.title}</span>
+      <div className="flex flex-col gap-[12px] w-[268px]">
+        <span className="font-semibold text-xl">{movie.title}</span>
         <p className="text-s text-[#827E7E]">
           Release Date: {movie.release_date}
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           {tags?.map((tag, index) => (
             <Tag key={index} tag={tag} />
           ))}
         </div>
-        <p>{movie.description}</p>
+        <p className="text-sm line-clamp-6 overflow-hidden">
+          {/* Added line-clamp to limit overflow */}
+          {movie.overview}
+        </p>
       </div>
     </div>
   );
