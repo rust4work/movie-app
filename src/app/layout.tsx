@@ -25,7 +25,7 @@ export default function RootLayout({
         <link rel="icon" href="./movie-icon.ico" />
       </head>
       <body className="flex flex-col items-center ">
-        <nav className=" mt-5 w-screen flex justify-center shadow-lg">
+        <nav className=" mt-5 w-screen flex justify-center shadow-sm">
           <Tabs
             activeKey={activeKey}
             onChange={(key) => router.push(`/${key}`)}

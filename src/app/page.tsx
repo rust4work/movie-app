@@ -1,9 +1,8 @@
 "use client";
 import { Movie } from "@/types/movie.types";
-import { Input, Spin } from "antd";
+import { Input, Spin, Pagination } from "antd";
 import MovieCard from "@/components/MovieCard";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 function debounce<T extends (...args: never[]) => void>(
   func: T,
@@ -20,37 +19,53 @@ export default function Search() {
   const [searchItem, setSearchItem] = useState("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
 
-  const fetchMovies = useCallback(
-    debounce((query: string) => {
-      if (!query.trim()) {
-        setMovies([]);
-        setLoading(false);
-        return;
-      }
+  const fetchMovies = useMemo(
+    () =>
+      debounce((query: string, page: number) => {
+        if (!query.trim()) {
+          setMovies([]);
+          setTotalResults(0);
+          setLoading(false);
+          return;
+        }
 
-      setLoading(true);
-      fetch(`/api/search?q=${encodeURIComponent(query)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setMovies(data.results || []);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setLoading(false);
-        });
-    }, 500),
-    []
+        setLoading(true);
+        fetch(`/api/search?q=${encodeURIComponent(query)}&page=${page}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setMovies(data.results || []);
+            setTotalResults(data.total_results || 0);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.error(err);
+            setLoading(false);
+          });
+      }, 500),
+    [setMovies, setLoading]
   );
 
   useEffect(() => {
-    fetchMovies(searchItem);
-  }, [searchItem, fetchMovies]);
+    if (searchItem) {
+      fetchMovies(searchItem, currentPage);
+    } else {
+      setMovies([]);
+      setTotalResults(0);
+      setLoading(false);
+    }
+  }, [searchItem, currentPage, fetchMovies]);
+
+  const handleChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 ">
-      <div className="sticky top-0 z-50 bg-white p-4 ">
+    <div className="w-full  mx-auto p-4 ">
+      <div className="sticky top-0 z-50 w-screen  bg-white p-4 flex justify-center shadow-lg">
         <Input
           className="sticky"
           placeholder="Type to search movies..."
@@ -58,8 +73,22 @@ export default function Search() {
           value={searchItem}
           onChange={(e) => setSearchItem(e.target.value)}
           allowClear
+          width="80%"
+          style={{ maxWidth: "80%" }}
         />
       </div>
+
+      {!loading && totalResults > 0 && (
+        <div className="flex justify-center mt-8">
+          <Pagination
+            current={currentPage}
+            pageSize={20}
+            total={totalResults > 1000 ? 1000 : totalResults}
+            onChange={handleChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
 
       {loading && (
         <div className="flex justify-center items-center flex-1 mt-10">
@@ -88,6 +117,17 @@ export default function Search() {
           />
         ))}
       </div>
+      {!loading && totalResults > 0 && (
+        <div className="flex justify-center mt-8">
+          <Pagination
+            current={currentPage}
+            pageSize={20}
+            total={totalResults > 1000 ? 1000 : totalResults} // API limit
+            onChange={handleChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -6,7 +6,7 @@ import Tag from "./helper/Tag";
 function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
   return (
-    <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl">
+    <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl px-4 py-4">
       <div className="w-[183px] h-[281px] flex-shrink-0">
         <Image
           src={`${movie.poster_path}`}

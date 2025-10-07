@@ -4,16 +4,17 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
+  const page = searchParams.get("page") || "1";
 
   if (!query) {
-    return NextResponse.json({ results: [] });
+    return NextResponse.json({ results: [], total_results: 0 });
   }
 
   try {
     const res = await fetch(
       `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
         query
-      )}&language=en-US&page=1`,
+      )}&language=en-US&page=${page}`,
       {
         headers: {
           accept: "application/json",
