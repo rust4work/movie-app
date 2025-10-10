@@ -7,12 +7,13 @@ function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
   return (
     <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl px-4 py-4">
-      <div className="w-[183px] h-[281px] flex-shrink-0">
+      <div className="relative w-[183px] h-[281px] flex-shrink-0">
         <Image
           src={`${movie.poster_path}`}
           alt={movie.title}
-          width={183}
-          height={281}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority
         />
       </div>
       <div className="flex flex-col gap-[12px] w-[268px]">
