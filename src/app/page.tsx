@@ -1,4 +1,5 @@
 "use client";
+
 import { Movie } from "@/types/movie.types";
 import { Input, Spin } from "antd";
 import MovieCard from "@/components/MovieCard";
@@ -26,12 +27,7 @@ export default function Search() {
   const fetchMovies = useMemo(
     () =>
       debounce((query: string, page: number) => {
-        if (!query.trim()) {
-          setMovies([]);
-          setTotalResults(0);
-          setLoading(false);
-          return;
-        }
+        if (!query.trim()) return;
 
         setLoading(true);
         fetch(`/api/search?q=${encodeURIComponent(query)}&page=${page}`)
@@ -46,30 +42,44 @@ export default function Search() {
             setLoading(false);
           });
       }, 500),
-    [setMovies, setLoading]
+    []
   );
 
+  const fetchTopRated = (page: number) => {
+    setLoading(true);
+    fetch(`/api/rated?page=${page}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMovies(data.results || []);
+        setTotalResults(data.total_results || 0);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    if (searchItem) {
+    if (searchItem.trim()) {
       fetchMovies(searchItem, currentPage);
     } else {
-      setMovies([]);
-      setTotalResults(0);
-      setLoading(false);
+      fetchTopRated(currentPage);
     }
   }, [searchItem, currentPage, fetchMovies]);
 
   return (
-    <div className=" w-screen max-w-[1200px] mx-auto py-4 ">
-      <div className=" sticky top-0 y-50 w-full z-[100] bg-white p-4 flex justify-center shadow-lg">
+    <div className="w-screen max-w-[1200px] mx-auto py-4">
+      <div className="sticky top-0 z-[100] w-full bg-white p-4 flex justify-center shadow-lg">
         <Input
-          className="sticky "
           placeholder="Type to search movies..."
           size="large"
           value={searchItem}
-          onChange={(e) => setSearchItem(e.target.value)}
+          onChange={(e) => {
+            setSearchItem(e.target.value);
+            setCurrentPage(1);
+          }}
           allowClear
-          width="80%"
           style={{ maxWidth: "80%" }}
         />
       </div>
@@ -90,14 +100,14 @@ export default function Search() {
         </div>
       )}
 
-      {!loading && searchItem && movies.length === 0 && (
+      {!loading && movies.length === 0 && (
         <div className="mt-4 text-center text-gray-500">
           No movies found for `{searchItem}`
         </div>
       )}
 
       <div className="mt-4 flex justify-center flex-wrap gap-4">
-        {movies?.map((movie) => (
+        {movies.map((movie) => (
           <MovieCard
             key={movie.id}
             id={movie.id}
@@ -111,6 +121,7 @@ export default function Search() {
           />
         ))}
       </div>
+
       {!loading && totalResults > 0 && (
         <div className="flex justify-center mt-8">
           <PaginationClient
