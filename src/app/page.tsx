@@ -1,7 +1,8 @@
 "use client";
 import { Movie } from "@/types/movie.types";
-import { Input, Spin, Pagination } from "antd";
+import { Input, Spin } from "antd";
 import MovieCard from "@/components/MovieCard";
+import PaginationClient from "@/components/helper/Pagination";
 import { useState, useEffect, useMemo } from "react";
 
 function debounce<T extends (...args: never[]) => void>(
@@ -58,16 +59,11 @@ export default function Search() {
     }
   }, [searchItem, currentPage, fetchMovies]);
 
-  const handleChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
-    <div className="w-full  mx-auto p-4 ">
-      <div className="sticky top-0 z-50 w-screen  bg-white p-4 flex justify-center shadow-lg">
+    <div className=" w-screen max-w-[1200px] mx-auto py-4 ">
+      <div className=" sticky top-0 y-50 w-full z-[100] bg-white p-4 flex justify-center shadow-lg">
         <Input
-          className="sticky"
+          className="sticky "
           placeholder="Type to search movies..."
           size="large"
           value={searchItem}
@@ -80,12 +76,10 @@ export default function Search() {
 
       {!loading && totalResults > 0 && (
         <div className="flex justify-center mt-8">
-          <Pagination
+          <PaginationClient
             current={currentPage}
-            pageSize={20}
-            total={totalResults > 1000 ? 1000 : totalResults}
-            onChange={handleChange}
-            showSizeChanger={false}
+            total={totalResults}
+            onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
       )}
@@ -119,12 +113,10 @@ export default function Search() {
       </div>
       {!loading && totalResults > 0 && (
         <div className="flex justify-center mt-8">
-          <Pagination
+          <PaginationClient
             current={currentPage}
-            pageSize={20}
-            total={totalResults > 1000 ? 1000 : totalResults} // API limit
-            onChange={handleChange}
-            showSizeChanger={false}
+            total={totalResults}
+            onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
       )}

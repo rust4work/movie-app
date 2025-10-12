@@ -25,7 +25,7 @@ export default function RootLayout({
         <link rel="icon" href="./movie-icon.ico" />
       </head>
       <body className="flex flex-col items-center ">
-        <nav className=" mt-5 w-screen flex justify-center shadow-sm">
+        <nav className=" mt-5 w-full flex justify-center shadow-sm">
           <Tabs
             activeKey={activeKey}
             onChange={(key) => router.push(`/${key}`)}
@@ -33,7 +33,7 @@ export default function RootLayout({
           />
         </nav>
 
-        <main className="w-screen flex justify-center mt-1">{children}</main>
+        <main className="w-full flex justify-center mt-1">{children}</main>
       </body>
     </html>
   );
