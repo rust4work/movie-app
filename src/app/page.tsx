@@ -1,21 +1,12 @@
 "use client";
 
-import { Movie } from "@/types/movie.types";
+import { useState, useEffect, useMemo } from "react";
 import { Input, Spin } from "antd";
+import debounce from "lodash.debounce";
+
+import { Movie } from "@/types/movie.types";
 import MovieCard from "@/components/MovieCard";
 import PaginationClient from "@/components/helper/Pagination";
-import { useState, useEffect, useMemo } from "react";
-
-function debounce<T extends (...args: never[]) => void>(
-  func: T,
-  delay: number
-): (...args: Parameters<T>) => void {
-  let timer: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => func(...args), delay);
-  };
-}
 
 export default function Search() {
   const [searchItem, setSearchItem] = useState("");
@@ -24,6 +15,7 @@ export default function Search() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  // Функция поиска с debounce
   const fetchMovies = useMemo(
     () =>
       debounce((query: string, page: number) => {
@@ -70,6 +62,7 @@ export default function Search() {
 
   return (
     <div className="w-screen max-w-[1200px] mx-auto py-4">
+      {/* Input */}
       <div className="sticky top-0 z-[100] w-full bg-white p-4 flex justify-center shadow-lg">
         <Input
           placeholder="Type to search movies..."
@@ -84,6 +77,7 @@ export default function Search() {
         />
       </div>
 
+      {/* Pagination Top */}
       {!loading && totalResults > 0 && (
         <div className="flex justify-center mt-8">
           <PaginationClient
@@ -94,18 +88,21 @@ export default function Search() {
         </div>
       )}
 
+      {/* Loading */}
       {loading && (
         <div className="flex justify-center items-center flex-1 mt-10">
           <Spin size="large" />
         </div>
       )}
 
+      {/* No results */}
       {!loading && movies.length === 0 && (
         <div className="mt-4 text-center text-gray-500">
           No movies found for `{searchItem}`
         </div>
       )}
 
+      {/* Movie Cards */}
       <div className="mt-4 flex justify-center flex-wrap gap-4">
         {movies.map((movie) => (
           <MovieCard
@@ -122,6 +119,7 @@ export default function Search() {
         ))}
       </div>
 
+      {/* Pagination Bottom */}
       {!loading && totalResults > 0 && (
         <div className="flex justify-center mt-8">
           <PaginationClient
