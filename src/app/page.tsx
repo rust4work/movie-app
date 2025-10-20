@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Input, Spin } from "antd";
+import { Input, Spin, Alert } from "antd";
 import debounce from "lodash.debounce";
 
 import { Movie } from "@/types/movie.types";
@@ -14,16 +14,21 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   // Функция поиска с debounce
   const fetchMovies = useMemo(
     () =>
       debounce((query: string, page: number) => {
-        if (!query.trim()) return;
-
         setLoading(true);
+        setError(null);
         fetch(`/api/search?q=${encodeURIComponent(query)}&page=${page}`)
-          .then((res) => res.json())
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return res.json();
+          })
           .then((data) => {
             setMovies(data.results || []);
             setTotalResults(data.total_results || 0);
@@ -31,6 +36,7 @@ export default function Search() {
           })
           .catch((err) => {
             console.error(err);
+            setError("Failed to fetch movies. Please try again.");
             setLoading(false);
           });
       }, 500),
@@ -56,14 +62,19 @@ export default function Search() {
     if (searchItem.trim()) {
       fetchMovies(searchItem, currentPage);
     } else {
+      setMovies([]);
+      setTotalResults(0);
       fetchTopRated(currentPage);
     }
+    return () => {
+      fetchMovies.cancel?.();
+    };
   }, [searchItem, currentPage, fetchMovies]);
 
   return (
     <div className="w-screen max-w-[1200px] mx-auto py-4">
       {/* Input */}
-      <div className="sticky top-0 z-[100] w-full bg-white p-4 flex justify-center shadow-lg">
+      <div className=" sticky top-0 z-[100] w-full bg-white p-4 flex justify-center shadow-lg">
         <Input
           placeholder="Type to search movies..."
           size="large"
@@ -75,6 +86,12 @@ export default function Search() {
           allowClear
           style={{ maxWidth: "80%" }}
         />
+      </div>
+      {/* Error Alert */}
+      <div className="mt-4">
+        {error && (
+          <Alert message="Error" description={error} type="error" showIcon />
+        )}
       </div>
 
       {/* Pagination Top */}
