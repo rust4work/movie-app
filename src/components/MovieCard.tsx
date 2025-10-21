@@ -2,6 +2,8 @@ import React from "react";
 import { Movie } from "../types/movie.types";
 import Image from "next/image";
 import Tag from "./helper/Tag";
+import RatingCircle from "./helper/RatingCircle";
+import { Rate } from "antd";
 
 function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
@@ -16,8 +18,11 @@ function MovieCard(movie: Movie) {
           priority
         />
       </div>
-      <div className="flex flex-col gap-[12px] w-[268px]">
-        <span className="font-semibold text-xl">{movie.title}</span>
+      <div className="flex flex-col gap-[12px] w-[300px]">
+        <div className="flex justify-between items-center">
+          <span className="font-semibold text-xl">{movie.title}</span>
+          <RatingCircle userRate={9} />
+        </div>
         <p className="text-s text-[#827E7E]">
           Release Date: {movie.release_date}
         </p>
@@ -27,6 +32,9 @@ function MovieCard(movie: Movie) {
           ))}
         </div>
         <p className="text-sm line-clamp-6 overflow-hidden">{movie.overview}</p>
+        <div>
+          <Rate defaultValue={5} />
+        </div>
       </div>
     </div>
   );
