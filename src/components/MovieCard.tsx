@@ -1,12 +1,16 @@
+"use client";
 import React from "react";
 import { Movie } from "../types/movie.types";
 import Image from "next/image";
 import Tag from "./helper/Tag";
 import RatingCircle from "./helper/RatingCircle";
-import CustomRating from "./helper/CustomRating";
-
+import { Rate } from "antd";
 function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
+
+  const handleRating = (value: number) => {
+    console.log(`Rated movie ID ${movie.id} with ${value} stars`);
+  };
 
   return (
     <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl mx-4 my-4">
@@ -34,12 +38,11 @@ function MovieCard(movie: Movie) {
         </div>
         <p className="text-xs line-clamp-6 overflow-hidden">{movie.overview}</p>
         <div>
-          <CustomRating
-            movieId={movie.id}
-            style={{ fontSize: "16px" }}
-            defaultValue={0}
+          <Rate
+            allowHalf
             count={10}
-            allowHalf={true}
+            onChange={handleRating}
+            style={{ fontSize: "16px" }}
           />
         </div>
       </div>
