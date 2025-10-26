@@ -4,7 +4,7 @@ import "./globals.css";
 import { Tabs, TabsProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import OfflineDetector from "@/components/helper/OfflineDetector";
-
+import InitGuestSession from "@/components/InitGuestSession";
 const tabItems: TabsProps["items"] = [
   { key: "/", label: "Search" },
   { key: "rated", label: "Rated" },
@@ -27,6 +27,7 @@ export default function RootLayout({
       </head>
       <body className="flex flex-col items-center">
         <OfflineDetector />
+
         <nav className="mt-5 w-full flex justify-center shadow-sm">
           <Tabs
             activeKey={activeKey}
@@ -34,7 +35,10 @@ export default function RootLayout({
             items={tabItems}
           />
         </nav>
-        <main className="w-full flex justify-center mt-1">{children}</main>
+        <main className="w-full flex justify-center mt-1">
+          <InitGuestSession />
+          {children}
+        </main>
       </body>
     </html>
   );
