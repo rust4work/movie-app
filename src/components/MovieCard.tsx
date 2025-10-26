@@ -3,12 +3,13 @@ import { Movie } from "../types/movie.types";
 import Image from "next/image";
 import Tag from "./helper/Tag";
 import RatingCircle from "./helper/RatingCircle";
-import { Rate } from "antd";
+import CustomRating from "./helper/CustomRating";
 
 function MovieCard(movie: Movie) {
   const tags = movie.genre_ids;
+
   return (
-    <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl px-4 py-4">
+    <div className="w-[451px] flex  gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl mx-4 my-4">
       <div className="relative w-[183px] h-[281px] flex-shrink-0">
         <Image
           src={`${movie.poster_path}`}
@@ -31,9 +32,15 @@ function MovieCard(movie: Movie) {
             <Tag key={index} tag={tag} />
           ))}
         </div>
-        <p className="text-sm line-clamp-6 overflow-hidden">{movie.overview}</p>
+        <p className="text-xs line-clamp-6 overflow-hidden">{movie.overview}</p>
         <div>
-          <Rate defaultValue={5} />
+          <CustomRating
+            movieId={movie.id}
+            style={{ fontSize: "16px" }}
+            defaultValue={0}
+            count={10}
+            allowHalf={true}
+          />
         </div>
       </div>
     </div>
