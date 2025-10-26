@@ -6,10 +6,12 @@ import Tag from "./helper/Tag";
 import RatingCircle from "./helper/RatingCircle";
 import { Rate } from "antd";
 function MovieCard(movie: Movie) {
+  const [rating, setRating] = React.useState<number>(0);
   const tags = movie.genre_ids;
 
   const handleRating = (value: number) => {
     console.log(`Rated movie ID ${movie.id} with ${value} stars`);
+    setRating(value);
   };
 
   return (
@@ -26,7 +28,7 @@ function MovieCard(movie: Movie) {
       <div className="flex flex-col gap-[12px] w-[300px]">
         <div className="flex justify-between items-center">
           <span className="font-semibold text-xl">{movie.title}</span>
-          <RatingCircle userRate={9} />
+          <RatingCircle userRate={rating} />
         </div>
         <p className="text-s text-[#827E7E]">
           Release Date: {movie.release_date}
