@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
 import PaginationClient from "@/components/helper/Pagination";
 import { Movie } from "@/types/movie.types";
@@ -11,14 +12,13 @@ interface RatedResponse {
   total_results: number;
 }
 
-export default function RatedPage({
-  initialPage = 1,
-}: {
-  initialPage?: number;
-}) {
+export default function RatedPage() {
+  const searchParams = useSearchParams();
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+
   const [movies, setMovies] = useState<Movie[]>([]);
   const [totalResults, setTotalResults] = useState(0);
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +51,11 @@ export default function RatedPage({
     fetchRatedMovies(currentPage);
   }, [currentPage]);
 
+  // Sync with URL changes
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl]);
+
   if (loading)
     return (
       <div className="flex justify-center items-center flex-1 mt-10">
@@ -69,14 +74,11 @@ export default function RatedPage({
     setCurrentPage(page);
     fetchRatedMovies(page);
   };
+
   return (
     <div className="min-h-screen w-full max-w-[1200px] flex flex-col">
       <div className="flex flex-wrap justify-center gap-8">
-        {loading ? (
-          <Spin size="large" />
-        ) : error ? (
-          <Alert message="Error" description={error} type="error" />
-        ) : movies.length > 0 ? (
+        {movies.length > 0 ? (
           movies
             .slice()
             .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
