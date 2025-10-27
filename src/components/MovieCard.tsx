@@ -60,7 +60,7 @@ function MovieCard({
   return (
     <>
       {contextHolder}
-      <div className="w-[451px] flex gap-8 max-w-wd min-h-72 shadow-sm hover:shadow-xl mx-4 my-4">
+      <div className="w-[451px] flex gap-4 px-1  max-w-wd min-h-72 shadow-sm hover:shadow-xl mx-4 my-4 ">
         <div className="relative w-[183px] h-[281px] shrink-0">
           <Image
             src={`https://image.tmdb.org/t/p/w500${poster_path}`}
