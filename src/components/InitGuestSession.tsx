@@ -17,23 +17,19 @@ async function getGuestSessionId() {
 
 export default function InitGuestSession() {
   useEffect(() => {
-    console.log("InitGuestSession mounted");
-
     const storedId = localStorage.getItem("guest_session_id");
-    console.log("Current localStorage ID:", storedId);
 
     if (!storedId) {
       console.log("No guest session found. Creating new one...");
       getGuestSessionId()
         .then((id) => {
           localStorage.setItem("guest_session_id", id);
-          console.log("✅ New guest session ID:", id);
         })
         .catch((err) => {
           console.error("❌ Error creating guest session:", err);
         });
     } else {
-      console.log("Guest session already exists:", storedId);
+      console.log("Guest session already exists");
     }
   }, []);
 

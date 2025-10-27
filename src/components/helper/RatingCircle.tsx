@@ -23,7 +23,7 @@ function RatingCircle({ userRate = 0 }: RatingCircleProps) {
 
   return (
     <div
-      className="w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 flex-shrink-0"
+      className="w-10 h-10 rounded-full flex items-center justify-center border-2 shrink-0"
       style={{ borderColor: borderColor }}
     >
       {userRate}

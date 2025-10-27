@@ -13,4 +13,5 @@ export interface Movie {
   video?: boolean;
   vote_count?: number;
   adult?: boolean;
+  rating?: number;
 }

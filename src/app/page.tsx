@@ -74,7 +74,7 @@ export default function Search() {
   return (
     <div className="w-screen max-w-[1200px] mx-auto py-4">
       {/* Input */}
-      <div className=" sticky top-0 z-[100] w-full bg-white p-4 flex justify-center shadow-lg">
+      <div className=" sticky top-0 z-100 w-full bg-white p-4 flex justify-center shadow-lg">
         <Input
           placeholder="Type to search movies..."
           size="large"

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import MovieCard from "@/components/MovieCard";
 import PaginationClient from "@/components/helper/Pagination";
 import { Movie } from "@/types/movie.types";
-import { Alert } from "antd";
+import { Alert, Spin } from "antd";
 
 interface RatedResponse {
   results: Movie[];
@@ -39,9 +39,9 @@ export default function RatedPage({
       const data: RatedResponse = await res.json();
       setMovies(data.results);
       setTotalResults(data.total_results);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || "Something went wrong");
+      setError((err as Error).message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -51,20 +51,38 @@ export default function RatedPage({
     fetchRatedMovies(currentPage);
   }, [currentPage]);
 
-  if (loading) return <p className="text-center py-10">Loading...</p>;
-  if (movies.length === 0)
+  if (loading)
+    return (
+      <div className="flex justify-center items-center flex-1 mt-10">
+        <Spin size="large" />
+      </div>
+    );
+
+  if (error)
     return (
       <div className="mt-8">
         <Alert message="Error" description={error} type="error" />
       </div>
     );
-  if (error) return <p className="text-red-500 text-center py-10">{error}</p>;
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchRatedMovies(page);
+  };
   return (
     <div className="min-h-screen w-full max-w-[1200px] flex flex-col">
       <div className="flex flex-wrap justify-center gap-8">
-        {movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.id} {...movie} />)
+        {loading ? (
+          <Spin size="large" />
+        ) : error ? (
+          <Alert message="Error" description={error} type="error" />
+        ) : movies.length > 0 ? (
+          movies
+            .slice()
+            .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+            .map((movie) => (
+              <MovieCard key={movie.id} {...movie} userRate={movie.rating} />
+            ))
         ) : (
           <p className="text-center py-10">No rated movies yet.</p>
         )}
@@ -77,6 +95,7 @@ export default function RatedPage({
             total={totalResults}
             pageSize={20}
             basePath="/rated"
+            onPageChange={handlePageChange}
           />
         </div>
       )}
