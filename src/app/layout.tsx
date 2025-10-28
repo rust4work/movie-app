@@ -5,6 +5,7 @@ import { Tabs, TabsProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import OfflineDetector from "@/components/helper/OfflineDetector";
 import InitGuestSession from "@/components/InitGuestSession";
+import { GenresProvider } from "@/context/GenresContext";
 const tabItems: TabsProps["items"] = [
   { key: "/", label: "Search" },
   { key: "rated", label: "Rated" },
@@ -37,7 +38,7 @@ export default function RootLayout({
         </nav>
         <main className="w-full flex justify-center mt-1">
           <InitGuestSession />
-          {children}
+          <GenresProvider>{children}</GenresProvider>
         </main>
       </body>
     </html>

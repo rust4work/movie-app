@@ -18,6 +18,7 @@ function MovieCard({
   overview,
   genre_ids,
   userRate = 0,
+  vote_average,
 }: MovieCardProps) {
   const [rating, setRating] = React.useState<number>(userRate);
   const [api, contextHolder] = notification.useNotification();
@@ -74,7 +75,9 @@ function MovieCard({
         <div className="flex flex-col gap-3 w-[300px]">
           <div className="flex justify-between items-center">
             <span className="font-semibold text-xl">{title}</span>
-            <RatingCircle userRate={rating} />
+            <RatingCircle
+              userRate={rating || parseFloat(vote_average.toFixed(1))}
+            />
           </div>
 
           <p className="text-s text-[#827E7E]">Release Date: {release_date}</p>

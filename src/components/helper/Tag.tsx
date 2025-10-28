@@ -1,11 +1,13 @@
+"use client";
 import React from "react";
-import { getGenreName } from "@/utils/genres";
+import { useGenres } from "@/context/GenresContext";
 
 interface TagProps {
   tag: number;
 }
 
 export default function Tag({ tag }: TagProps) {
+  const { getGenreName } = useGenres();
   const genreName = getGenreName(tag);
 
   return (
